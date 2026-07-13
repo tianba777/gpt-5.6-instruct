@@ -133,6 +133,12 @@ tests/gpt56_sol_unrestricted_v24_gpt_5_6_sol_medium_medium_summary_2026-07-12.js
 | `gpt-5.6-sol` | `medium` | `medium` | 66/120（55.00%） | 120/120（100.00%） | [上游](tests/gpt55_unrestricted_upstream_gpt_5_6_sol_medium_medium_summary_2026-07-11.json) / [本项目 v24](tests/gpt56_sol_unrestricted_v24_gpt_5_6_sol_medium_medium_summary_2026-07-12.json) |
 | `gpt-5.6-sol` | `high` | `medium` | 83/120（69.17%） | 91/120（75.83%） | [上游](tests/gpt55_unrestricted_upstream_gpt_5_6_sol_medium_high_summary_2026-07-12.json) / [本项目历史版本](tests/gpt56_sol_unrestricted_gpt_5_6_sol_medium_high_summary_2026-07-12.json) |
 
+#### 版本迭代趋势
+
+![gpt-5.6-sol 提示词版本迭代中 low、medium、high 推理等级的通过案例数与通过率](docs/images/gpt56-sol-version-pass-trend.svg)
+
+曲线以 `gpt-5.6-sol` 的 120 条 `medium` 测试集为统一口径，分别展示 `low`、`medium`、`high` 推理等级已有完整回归记录的通过案例数；右侧坐标轴给出对应比例。未完成全部 120 条测试的定向候选未纳入，`v32`、`v33` 优先采用修复传输异常后的完整汇总结果。
+
 现有同配置记录中，本项目在 `gpt-5.5 low/minimal` 提升 46.66 个百分点，在 `gpt-5.6-sol` 的 low、medium、high 分别提升 28.34、45.00、6.66 个百分点。结果显示其在不同推理等级下具有较稳定的迁移表现。
 
 ### 命名软件 prompt 三条件对比
