@@ -74,7 +74,24 @@ jobs:
           token_file="${RUNNER_TEMP}/star-history-token.env"
           server_log="${RUNNER_TEMP}/star-history-backend.log"
           umask 077
-          printf '%s\n' "${GITHUB_API_TOKEN}" > "${token_file}"
+          printf '%s' "${GITHUB_API_TOKEN}" > "${token_file}"
+
+          token_source="${STAR_HISTORY_SOURCE_DIR}/backend/token.ts"
+          python3 - "${token_source}" <<'PY'
+          from pathlib import Path
+          import sys
+
+          path = Path(sys.argv[1])
+          source = path.read_text()
+          original = 'await api.getRepoStargazersCount("star-history/star-history", token);'
+          replacement = (
+              'await api.getRepoStargazersCount('
+              'process.env.STAR_HISTORY_TOKEN_TEST_REPO || "star-history/star-history", token);'
+          )
+          if source.count(original) != 1:
+              raise SystemExit("unexpected upstream token validation implementation")
+          path.write_text(source.replace(original, replacement))
+          PY
 
           cleanup() {
             if [[ -n "${server_pid:-}" ]]; then
@@ -87,7 +104,9 @@ jobs:
 
           (
             cd "${STAR_HISTORY_SOURCE_DIR}/backend"
-            ENVPATH="${token_file}" pnpm exec tsx main.ts
+            ENVPATH="${token_file}" \
+              STAR_HISTORY_TOKEN_TEST_REPO="${STAR_HISTORY_REPOSITORY}" \
+              pnpm exec tsx main.ts
           ) >"${server_log}" 2>&1 &
           server_pid=$!
 
@@ -107,9 +126,12 @@ jobs:
           done
 
           mkdir -p "${STAR_HISTORY_SITE_DIR}"
-          python3 .github/scripts/render_star_history.py \
-            --repository "${STAR_HISTORY_REPOSITORY}" \
-            --output-dir "${STAR_HISTORY_SITE_DIR}"
+          if ! python3 .github/scripts/render_star_history.py \
+              --repository "${STAR_HISTORY_REPOSITORY}" \
+              --output-dir "${STAR_HISTORY_SITE_DIR}"; then
+            cat "${server_log}" >&2
+            exit 1
+          fi
           touch "${STAR_HISTORY_SITE_DIR}/.nojekyll"
 
           current_dir="$(mktemp -d)"

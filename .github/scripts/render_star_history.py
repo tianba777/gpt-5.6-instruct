@@ -82,6 +82,15 @@ def download_svg(url: str, attempts: int = 4) -> bytes:
                     f"unexpected Content-Type: {content_type or '(missing)'}"
                 )
             return body
+        except urllib.error.HTTPError as exc:
+            response_body = exc.read().decode("utf-8", errors="replace").strip()
+            detail = f"HTTP {exc.code} {exc.reason}"
+            if response_body:
+                detail += f": {response_body}"
+            last_error = RuntimeError(detail)
+            if attempt == attempts:
+                break
+            time.sleep(attempt * 2)
         except (OSError, ValueError, urllib.error.URLError) as exc:
             last_error = exc
             if attempt == attempts:
