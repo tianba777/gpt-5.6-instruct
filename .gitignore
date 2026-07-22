@@ -3,6 +3,7 @@ __pycache__/
 *.log
 reports/
 tests/
+releases/
 
 .DS_Store
 **/.DS_Store
