@@ -128,13 +128,17 @@ python3 codex-instruct.py --reset
 
 </details>
 
-The deploy script extracts the selected version, copies it to `CODEX_HOME`, backs up `config.toml`, and writes:
+With `--reset`, the script lists available backups and asks for confirmation before restoring the configuration and removing managed instruction files.
+
+### Manual Deployment and Rollback
+
+Extract the selected version, copy the instruction file to `CODEX_HOME`, back up `config.toml`, and add:
 
 ```toml
 model_instructions_file = "./gpt-5.6-sol-unrestricted-v5.md"
 ```
 
-With `--reset`, the script lists available backups and asks for confirmation before restoring the configuration and removing managed instruction files.
+To roll back manually, delete or comment out the line above with `#` to restore the model's original default behavior. You can also delete `gpt-5.6-sol-unrestricted-v5.md` or `gpt-5.6-sol-unrestricted-v35.md` to clean up the local files.
 
 <a id="results"></a>
 

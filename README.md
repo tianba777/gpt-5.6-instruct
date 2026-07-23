@@ -128,13 +128,17 @@ python3 codex-instruct.py --reset
 
 </details>
 
-部署脚本会解压所选版本，将指令文件复制到 `CODEX_HOME`，备份 `config.toml`，并写入：
+执行 `--reset` 时，脚本会列出可用备份并要求二次确认，随后恢复配置并清理脚本管理的指令文件。
+
+### 手动部署及回滚
+
+解压所选版本，将指令文件复制到 `CODEX_HOME`，备份 `config.toml`，并写入：
 
 ```toml
 model_instructions_file = "./gpt-5.6-sol-unrestricted-v5.md"
 ```
 
-执行 `--reset` 时，脚本会列出可用备份并要求二次确认，随后恢复配置并清理脚本管理的指令文件。
+若要手动回滚，直接删除或用`#`注释掉上述行即可恢复模型原始默认行为；可选择手动删除 `gpt-5.6-sol-unrestricted-v5.md` 或 `gpt-5.6-sol-unrestricted-v35.md`，以清理本地文件。
 
 <a id="results"></a>
 
